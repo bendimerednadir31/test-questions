@@ -1,0 +1,18 @@
+On doit importer les packages suivant : 
+import java.time.Date; //déconseillé de nos jours car obselète
+import java.util.Calendar; //depricated
+import javax.servlet.http.HttpSession;
+/*****Initialisation des variables*****/
+String titre = "Projet Recrutement";
+int numero = 10;
+Calendar dateToday = Calendar.getInstance();
+Date dateDebut = dateToday.getTime();
+Calendar dateEnd= Calendar.getInstance();
+dateEnd.set(2024,Calendar.NOVEMBER, 12);
+Date dateFin = dateEnd.getTime();
+String etat ="GOING";
+HttpSession session = new HttpSession();
+String json = "{\"JSON\":\"EXAPLEJSONFILE\"}";
+ProjectBeanCustom projectBeanCustom  = new ProjectBeanCustom(titre, numero, dateDebut, dateFin, etat);
+/***saveBean use****/
+projectBeanCustom.saveBean(session,json,ProjectBean.class,true);

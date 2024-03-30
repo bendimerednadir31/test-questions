@@ -1,0 +1,68 @@
+Classe Java ProjectGenericBean.java :
+
+**Dans le corp de la méthode saveBean, on fait appel à la méthode getBean pour récupérer l'objet bean de type BasicBean comme suivant : BasicBean bean = getBean((HttpSession) session, (String) null, type);
+Il faut mieux éviter l'usage du cast explicite car le compilateur peut déduire que le null est de type String, et session est de type HttpSession.
+utiliser if (StringUtils.notBlank(json)) au lieu if (json != null && json.length() != 0).
+On risque une exception de type NullPointerException lors de l'appel de bean.populateFromJson(jsonO, save), car la variable bean n'est pas vérifié si elle est null ou non avant son usage dans le bloc try-catch
+**Pour les méthode saveBean et getBean
+La gestion des exceptions est moins précise, en effet, il y a usage d'une exception générale Exception au lieu d'usage d'exception qui fait référence à un beug spécifique, cela rendra le debogage non claire et non explicite.
+Ajouter les messages d'exceptions à nos différentes exceptions.
+Example : 
+            catch (JSONException var8) {
+				throw new Exception("The json is not correct message", var8.getMessage()); // ajout de var8.getMessage()
+			}
+            catch (AccessDeniedException var7) {
+				throw new Exception("Access denied message",type.getSimpleName(), var7); // ajout message d'erreur
+			}
+			/*************/
+			catch (Exception var6) { 
+			throw new Exception("Message specifique",type.getName(), var6); 
+			}
+			/**************/
+			On peut créer nos propres expection qui hérites de Exception, et les appeler dans nos blocs catchs.
+			comme exemple suivant :
+			/**Créer notre exception qui extend Exception**/
+			public class CustomException extends Exception {
+				public CustomException(String message, String typeName, Throwable cause) {
+					super(message + " - Type: " + typeName, cause);
+				}
+			}
+			et dans notre bloc catch
+			
+			catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException var6) { 
+				throw new CustomException("Message specifique",type.getName(), var6); 
+			}
+
+**Dans le code de la methode saveBean, "throw new Exception("The json is not correct");" est appelé dans le bloc try-catch à l'intérieur de la condition if et aussi dans la partie else lié à la condition if, ce qui peut sembler à une mauvaise conception du code.
+/********************************************************************************************************************************/
+_Classe ProjectBean.java :
+
+import java.time.*; n'est pas une bonne pratique car on va devoir charger toutes l'interface time avec ses attributs et méthodes. Le mieux est d'appeler chaque attribut ou méthode utilisé sans devoir utiliser le signe "*".
+import java.util.Date; et import java.util.Calendar; sont classées depricated et ne sont plus utilisées de nos jours, il faut mieux utiliser la nouvelle interface apparue dans java 8 LocalDate du package java.time.
+import java.time.Period; n'est pas importer correctement, au lieu de mettre * il faut l'ajouter dans nos importations
+Dans la méthode toString, on utilise la classe StringUtils.isEmpty(titre), et cette dernière n'est pas importer, il faut importer le package correspondant "import org.apache.commons.lang3.StringUtils;" et ajouter si ce n'est pas encore fait, la dépendance dans le pom.xml
+Mauvaise manipulation des dates dans la méthode getDuration
+	@Override
+	public Period getDuration() {
+		if (this.dateDebut != null && this.dateFin != null) {
+			Calendar startDate = new GregorianCalendar();
+			startDate.setTime(this.dateDebut);
+			Calendar endDate = new GregorianCalendar();
+			endDate.setTime(this.dateFin);
+
+			LocalDate oldDate = LocalDate.of(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH),
+					startDate.get(Calendar.DAY_OF_MONTH));
+			LocalDate newDate = LocalDate.of(endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH),
+					endDate.get(Calendar.DAY_OF_MONTH));
+			return Period.between(oldDate, newDate);
+		}
+		return Period.ZERO;
+	}
+Il faut éviter l'usage de Calendar et Date dans le développement récent, cependant sur ce code, il existe des erreurs dans cette méthode, car on ne peut pas s'appuyer sur les indices de l'object Calendar pour construire l'objet LocalDate, par conséquence, ça peut introduir dans les erreurs d'indexation car dans LocalDate l'indice des mois commence par 0 pour janvier et sur Calendar ça commence avec 1.
+pour convertir un Objet Date en LocalDate, il faut utiliser la méthode toInstant() pour récupérer un object Instant à partir d'une date, et ensuite converitr cet objet Instant en un fuseau horaire grâce à la méthode atZone().
+
+**Dans la méthode getDurationToString, il faut au mieux utiliser new StringBuilder pour construire un object String comme fût le cas dans la méthode toString().
+
+/********************************************************************************************************************************/
+_Classe ProjectBeanCustom.java
+Usage de date import java.util.Date; est depricated, il faut mieux utiliser LocalDate du package java.time.

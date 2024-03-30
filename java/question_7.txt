@@ -1,0 +1,39 @@
+/**Les imports nécessaires au bon déroulement du code dans la classe ProjectBean.java**/
+
+import org.apache.commons.lang3.StringUtils;
+import java.time.Period;
+
+//Dans la classe ProjectBean.java
+	private static final String FLAG_UNKNOWN = "le flag est inconnu";
+        private static final String INVALID_FLAG = "le flag est invalide";
+
+//L'implimentation de la méthode getDurationToString
+
+/**
+* Renvoie une représentation sous forme de String de la durée du projet en fonction du flag spécifié.
+* 
+* @param Unité de temps souhaitée ("YEAR", "MONTH" ou "DAY")
+* @return Une chaîne représentant la durée du projet dans l'unité spécifiée par le flag, ou un message d'erreur si le flag est invalide ou inconnu
+*/
+
+public String getDurationToString(String flag) {
+    if (StringUtils.isNotBlank(flag)) 
+	{
+	    Period projetDuration = this.getDuration();
+		switch (flag.toUpperCase())
+		{
+		   case "YEAR":
+                     return String.valueOf(projectDuration.getYears()).concat(" Year(s)");
+                   case "MONTH":
+                    return String.valueOf(projectDuration.getMonths()).concat(" Month(s)");
+                   case "DAY":
+                    return String.valueOf(projectDuration.getDays()).concat(" Day(s)");
+                   default:
+                    return FLAG_UNKNOWN; // Retourne un message si le drapeau est inconnu
+		}
+        } 
+	else 
+	{
+         return INVALID_FLAG; // Retourne un message si le drapeau est null ou vide
+        }
+}

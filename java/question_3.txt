@@ -1,0 +1,2 @@
+Dans notre classe ProjectBeanCustom, on a l'attribut état déclarer sans règle d'encapsultation, mais il est appelé grâce à l'opérateur this "this.etat", qui permet de faire référence à l'attribut etat de la classe ou l'instance de classe ProjectBeanCustom.
+Cette attribut est aussi accessible seulement pour les classes dans le même package grâce package-private qui permet un usage d'une visibilité par défaut en java.

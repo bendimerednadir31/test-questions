@@ -1,0 +1,7 @@
+La classe mère est ProjectGenericBean.java qui est une classe abstraite, ProjectBean.java hérite de la classe abstraite ProjectGenericBean.java et qui implémente les deux méthode déclaré abstraite aussi "public Period getDuration()" et "public String getDurationToString()", et en dernier, on a la clase ProjectBeanCustom.java  qui hérite la classe ProjectBean.java, en résumé, la relation hiérarchique entre ces classes, c'est l'héritage en utilisant le mot clé extends.
+/*********************************************************************************/
+Le constructeur public ProjectBeanCustom(String titre, int numero, Date dateDebut, Date dateFin, String etat) invoque le constructeur de sa super classe ProjectBean grace au mot clé super(titre, numero, dateDebut, dateFin);
+/************/
+Le constructeur public public ProjectBeanCustom(String titre, int numero, Date dateDebut, Date dateFin) invoque le constructeur de sa super classe ProjectBean grâce au mot clé super(titre, numero, dateDebut, dateFin);
+/******/ 
+Pour les deux constructeurs, ils n'invoque pas leurs super classe ProjectGenericBean.java car elle ne dispose pas de constructeur.
